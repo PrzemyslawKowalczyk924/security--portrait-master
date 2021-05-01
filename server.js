@@ -5,9 +5,11 @@ const mongoose = require('mongoose');
 const formidable = require('express-formidable');
 const uniqid = require('uniqid');
 const connectToDB = require('./db');
+const requestIp = require('request-ip');
 
 // start express server
 const app = express();
+app.use(requestIp.mw());
 const server = app.listen(process.env.PORT || 8000, () => {
   console.log('Server is running...');
 });
