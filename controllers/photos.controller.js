@@ -8,6 +8,19 @@ exports.add = async (req, res) => {
     const { title, author, email } = req.fields;
     const file = req.files.file;
 
+    //validation pattern for title & author
+    const pattern = new RegExp(/(<\s*(strong|em)*>(([A-z]|\s)*)<\s*\/\s*(strong|em)>)|(([A-z]|\s|\.)*)/,
+    "g");
+    const validatedTitle = title.match(pattern).join('');
+    const validatedAuthor = author.match(pattern).join('');
+    
+    if(validatedTitle < title.length && validatedAuthor < author.length) throw new Error("Invalid characters..."); 
+
+    //validation patern for email
+    const emailPattern = /\S+@\S+\.\S+/;
+    const validatedEmail = emailPattern.test(email);
+    if(!validatedEmail) throw new Error('Wrong email!');
+
     if(title && author && email && file) { // if fields are not empty...
 
       const fileName = file.path.split('/').slice(-1)[0]; // cut only filename from full path, e.g. C:/test/abc.jpg -> abc.jpg
